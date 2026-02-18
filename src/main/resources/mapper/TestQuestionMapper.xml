@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="oj.mapper.TestQuestionMapper">
+
+    <insert id="addTestQuestion" parameterType="oj.constant.dto.AddTestQuestionDTO" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into questions (
+        <if test="id != null and id != ''">id,</if>
+        title,
+        label,
+        test_point_num,
+        description,
+        create_time,
+        update_time
+        )
+        values (
+        <if test="id != null and id != ''">#{id},</if>
+        #{title},
+        #{label},
+        #{testPointNum},
+        #{description},
+        #{createTime},
+        #{updateTime}
+        )
+    </insert>
+
+    <insert id="addTestPoints" parameterType="java.util.List">
+        insert into test_points (
+        question_id,
+        input,
+        output,
+        is_sample,
+        create_time,
+        update_time
+        )
+        values
+        <foreach collection="testPoints" item="testPointDTO" separator=",">
+            (
+            #{testPointDTO.questionId},
+            #{testPointDTO.input},
+            #{testPointDTO.output},
+            #{testPointDTO.isSample},
+            #{testPointDTO.createTime},
+            #{testPointDTO.updateTime}
+            )
+        </foreach>
+    </insert>
+
+
+    <delete id="deleteTestQuestionByIdFromQuestions" parameterType="java.lang.String">
+        delete from questions where id = #{id}
+    </delete>
+
+    <delete id="deleteTestQuestionByIdFromTestPoints" parameterType="java.lang.String">
+        delete from test_points where question_id = #{id}
+    </delete>
+
+    <select id="selectTestQuestionByPage" resultType="oj.constant.vo.TestQuestionVO">
+        select * from questions
+        <where>
+            <if test="keyword != null and keyword != ''">
+                and title like #{keyword}
+            </if>
+        </where>
+        limit #{start}, #{size}
+    </select>
+
+    <select id="selectTestQuestionById" parameterType="java.lang.String" resultType="oj.constant.vo.TestQuestionVO">
+        select * from questions where id = #{id}
+    </select>
+
+    <select id="selectTestPointsByQuestionId" parameterType="java.lang.String" resultType="oj.constant.vo.TestPointVO">
+        select * from test_points where question_id = #{id}
+    </select>
+
+    <select id="selectTestQuestionsByName" resultType="oj.constant.vo.TestQuestionVO">
+        select * from questions where title like #{name}
+    </select>
+
+
+    <select id="selectTestQuestionCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(*) from questions
+        <where>
+            <if test="keyword != null and keyword != ''">
+                and title like #{keyword}
+            </if>
+        </where>
+    </select>
+
+
+    <insert id="addTestPointResult">
+        insert into user_submission_record (
+        <!-- 动态字段：仅当属性非空时添加字段 -->
+        <if test="response.stdout != null and response.stdout != ''">output,</if>
+        <if test="response.time != null">time,</if>
+        <if test="response.memory != null">memory,</if>
+        <if test="codeId != null">code_id,</if>
+        <!-- 固定字段 -->
+        result,
+        test_point_id,
+        question_id,
+        language,
+        user_id
+        )
+        values (
+        <if test="response.stdout != null and response.stdout != ''">#{response.stdout},</if>
+        <if test="response.time != null">#{response.time},</if>
+        <if test="response.memory != null">#{response.memory},</if>
+        <if test="codeId != null">#{codeId},</if>
+        <!-- result字段：取status的描述，为空则显示"未知" -->
+        ${response.status != null ? "'" + response.status.description + "'" : "'ERROR'"},
+        #{testPointId},
+        #{questionId},
+        #{languageStr},
+        #{userId}
+        )
+
+    </insert>
+
+</mapper>

@@ -1,0 +1,65 @@
+# 应用名称
+#spring:
+#  application:
+#    name: my-spring-boot-app # 你的应用名称
+
+# 数据库配置 (以 MySQL 为例)
+
+# Spring Data JPA 配置
+#  jpa:
+#    database-platform: org.hibernate.dialect.MySQL8Dialect
+#    show-sql: true # 在控制台显示SQL语句，方便调试
+#    hibernate:
+#      ddl-auto: update # 自动更新数据库表结构 (开发环境常用)
+
+# 服务器配置
+
+
+
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/oj
+    username: root
+    password: 1743355601
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password: 123456
+    database: 0
+    timeout: 3000ms
+    lettuce:
+      pool:
+        max-active: 8 # 最大连接数
+        max-idle: 8 # 最大空闲连接数
+        min-idle: 2 # 最小空闲连接数
+        max-wait: -1ms # 最大等待时间（-1 表示无限制，避免线程阻塞）
+
+
+# MyBatis Plus 配置
+mybatis-plus:
+  #mapper配置文件
+  mapper-locations: classpath:mapper/*.xml
+  # 类型别名包路径
+  type-aliases-package: oj.pojo.entity
+  # 全局配置
+  global-config:
+    db-config:
+      # 主键类型
+      id-type: auto
+      # 表名前缀
+      table-prefix:
+  # 配置
+  configuration:
+    # 开启驼峰命名
+    map-underscore-to-camel-case: true
+    # 打印 SQL 日志
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
