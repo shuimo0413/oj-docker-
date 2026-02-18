@@ -1,209 +1,136 @@
-# 校园OJ平台
+# OJ 在线判题系统
 
-一个基于 Spring Boot + Vue 3 的校园在线判题（OJ）平台，支持多语言代码提交、自动判题、题目管理等功能。
+一个基于 Spring Boot 的在线判题（Online Judge）平台，支持多语言代码提交与自动判题。
 
 ## 技术栈
 
-### 后端
-- **Spring Boot 2.6.13** - Java 应用框架
-- **MyBatis** - 持久层框架
-- **MySQL 8.0** - 关系型数据库
-- **Redis** - 缓存和会话管理
-- **Docker Java** - Docker 容器管理（用于代码沙箱）
+- **Java 17**
+- **Spring Boot 2.6.13**
+- **MyBatis Plus 3.5.3.1**
+- **MySQL 8.0**
+- **Redis**
+- **Docker** (代码沙箱运行环境)
+- **Spring Cloud Alibaba Sentinel**
 
-### 前端
-- **Vue 3** - 渐进式 JavaScript 框架
-- **Vite** - 前端构建工具
-- **Element Plus** - Vue 3 组件库
-- **CodeMirror** - 代码编辑器
-- **Axios** - HTTP 请求库
+## 支持的编程语言
 
-## 功能特性
-
-### 用户功能
-- 用户注册/登录
-- 题目列表浏览（支持搜索和分页）
-- 题目详情查看
-- 在线代码编辑（支持 Java、Python、C++、JavaScript）
-- 代码提交和自动判题
-- 判题结果查看（通过/失败、耗时、内存占用）
-- 个人中心（查看信息、修改密码）
-
-### 管理员功能
-- 题目管理（添加、编辑、删除）
-- 测试点管理
-- 题目搜索和分页
-
-### Docker判题沙箱
-- 安全隔离：每个判题请求在独立的Docker容器中运行
-- 资源限制：内存、CPU、执行时间限制
-- 网络隔离：禁用容器网络访问
-- 文件系统隔离：使用只读根文件系统和tmpfs
-- 权限控制：非root用户运行，移除所有capabilities
-- 多语言支持：Java、Python、C++
+| 语言 | 语言ID |
+|------|--------|
+| C | 1 |
+| C++ | 2 |
+| Java | 4 |
+| Python | 10 |
+| C# | 22 |
 
 ## 项目结构
 
 ```
 oj/
-├── src/main/
-│   ├── java/oj/
-│   │   ├── config/          # 配置类
-│   │   ├── controller/      # 控制器
-│   │   ├── interceptor/     # 拦截器
-│   │   ├── mapper/          # MyBatis Mapper
-│   │   ├── pojo/            # 数据对象
-│   │   │   ├── dto/         # 数据传输对象
-│   │   │   ├── vo/          # 视图对象
-│   │   │   └── enums/       # 枚举类
-│   │   ├── service/         # 业务逻辑
-│   │   └── util/            # 工具类
-│   └── resources/
-│       ├── mapper/          # MyBatis XML
-│       ├── static/          # 静态资源
-│       └── application.yml  # 配置文件
-├── sandbox/                 # 判题沙箱服务
-│   ├── judge-service/       # 判题服务
-│   │   ├── src/
-│   │   │   └── main/java/oj/sandbox/
-│   │   │       ├── controller/    # 判题控制器
-│   │   │       ├── model/         # 判题模型
-│   │   │       └── service/       # 判题服务
-│   │   ├── Dockerfile
-│   │   └── pom.xml
-│   └── sandbox-image/       # 沙箱镜像
-│       └── Dockerfile
-├── frontend/                # 前端项目
-│   ├── src/
-│   │   ├── api/            # API 接口
-│   │   ├── layout/         # 布局组件
-│   │   ├── router/         # 路由配置
-│   │   ├── stores/         # 状态管理
-│   │   ├── utils/          # 工具函数
-│   │   └── views/          # 页面组件
-│   ├── package.json
-│   └── vite.config.js
+├── src/main/java/oj/
+│   ├── config/              # 配置类
+│   │   ├── AsyncConfig.java
+│   │   ├── CorsConfig.java
+│   │   ├── Judge0Config.java
+│   │   ├── RedisConfig.java
+│   │   └── WebConfig.java
+│   ├── constant/            # 常量与数据对象
+│   │   ├── dto/             # 数据传输对象
+│   │   ├── entity/          # 实体类
+│   │   ├── pojo/            # POJO类
+│   │   ├── rpc/             # RPC请求响应对象
+│   │   └── vo/              # 视图对象
+│   ├── controller/          # 控制器
+│   │   ├── AdminTestQuestionController.java
+│   │   ├── CommentController.java
+│   │   ├── UserController.java
+│   │   └── UserTestQuestionController.java
+│   ├── interceptor/         # 拦截器
+│   ├── mapper/              # MyBatis Mapper接口
+│   ├── service/             # 业务逻辑层
+│   └── util/                # 工具类
+├── src/main/resources/
+│   ├── mapper/              # MyBatis XML映射文件
+│   ├── application.yml      # 主配置文件
+│   └── application-docker.yml
 ├── docker/
-│   └── Dockerfile          # 后端 Dockerfile
-├── docker-compose.yml      # Docker Compose 配置
-├── deploy.sh               # Linux/Mac 部署脚本
-├── deploy.bat              # Windows 部署脚本
-├── DEPLOYMENT.md           # 详细部署文档
-└── pom.xml                 # Maven 配置
+│   ├── Dockerfile
+│   └── docker-compose.yml
+└── pom.xml
 ```
+
+## 功能模块
+
+### 用户模块 (`/api/user`)
+
+| 接口 | 方法 | 说明 |
+|------|------|------|
+| `/login` | POST | 用户登录 |
+| `/register` | POST | 用户注册 |
+| `/logout` | POST | 用户登出 |
+| `/changePassword` | POST | 修改密码 |
+| `/info` | PUT | 更新用户信息 |
+| `/status` | GET | 获取用户状态 |
+
+### 题目模块 - 用户端 (`/api/user/testQuestion`)
+
+| 接口 | 方法 | 说明 |
+|------|------|------|
+| `/getTestQuestionByPage` | GET | 分页获取题目列表 |
+| `/getTestQuestionById` | GET | 根据ID获取题目详情 |
+| `/submitTestQuestion` | POST | 提交代码判题 |
+| `/getTestQuestionByName` | GET | 按名称搜索题目 |
+| `/getTestPointsListByQuestionId` | GET | 获取题目测试点 |
+
+### 题目模块 - 管理端 (`/api/testQuestion`)
+
+| 接口 | 方法 | 说明 |
+|------|------|------|
+| `/getTestQuestionByPage` | GET | 分页获取题目列表 |
+| `/getTestQuestionCount` | GET | 获取题目总数 |
+| `/getTestQuestionById` | GET | 根据ID获取题目 |
+| `/addTestQuestion` | POST | 添加新题目 |
+| `/updateTestQuestion` | POST | 更新题目 |
+| `/deleteTestQuestionById` | DELETE | 删除题目 |
+| `/getTestPointsListByQuestionId` | GET | 获取测试点列表 |
+
+### 评论模块 (`/api/comment`)
+
+| 接口 | 方法 | 说明 |
+|------|------|------|
+| `/addComment` | POST | 添加评论 |
+| `/addCommentLike` | POST | 点赞评论 |
+| `/getComment` | GET | 获取单条评论 |
+| `/getComments` | GET | 分页获取题目评论 |
+| `/deleteComment` | DELETE | 删除评论 |
+| `/cancelCommentLike` | DELETE | 取消点赞 |
 
 ## 快速开始
 
-### 方式一：Docker Compose（推荐）
+### 环境要求
 
-1. 克隆项目
+- JDK 17+
+- Maven 3.6+
+- MySQL 8.0+
+- Redis 6.0+
+
+### 本地开发
+
+1. **克隆项目**
 ```bash
 git clone <repository-url>
 cd oj
 ```
 
-2. 使用快速启动脚本
-```bash
-# Linux/Mac
-chmod +x deploy.sh
-./deploy.sh
-
-# Windows
-deploy.bat
+2. **创建数据库**
+```sql
+CREATE DATABASE oj;
 ```
 
-或者手动启动所有服务
-```bash
-docker-compose up -d --build
-```
+3. **修改配置文件**
 
-3. 访问应用
-- 前端：http://localhost
-- 后端 API：http://localhost:8080
-- 判题服务：http://localhost:8081
-
-### 方式二：本地开发
-
-#### 后端启动
-
-1. 配置数据库
-   - 安装 MySQL 8.0
-   - 创建数据库 `oj`
-   - 修改 `src/main/resources/application.yml` 中的数据库配置
-
-2. 配置 Redis
-   - 安装 Redis
-   - 修改 `src/main/resources/application.yml` 中的 Redis 配置
-
-3. 配置判题服务
-   - 修改 `src/main/resources/application.yml` 中的判题服务地址
-   ```yaml
-   judge:
-     service:
-       url: http://localhost:8081
-   ```
-
-4. 启动后端服务
-```bash
-mvn spring-boot:run
-```
-
-后端服务将在 `http://localhost:8080` 启动。
-
-#### 前端启动
-
-1. 安装依赖
-```bash
-cd frontend
-npm install
-```
-
-2. 启动开发服务器
-```bash
-npm run dev
-```
-
-前端服务将在 `http://localhost:5173` 启动。
-
-## API 接口文档
-
-### 用户接口
-
-| 接口 | 方法 | 说明 |
-|------|------|------|
-| `/api/user/login` | POST | 用户登录 |
-| `/api/user/register` | POST | 用户注册 |
-| `/api/user/logout` | POST | 用户登出 |
-| `/api/user/changePassword` | POST | 修改密码 |
-| `/api/user/info` | PUT | 更新用户信息 |
-
-### 题目接口
-
-| 接口 | 方法 | 说明 |
-|------|------|------|
-| `/api/user/testQuestion/getTestQuestionByPage` | GET | 分页获取题目列表 |
-| `/api/user/testQuestion/getTestQuestionById` | GET | 根据ID获取题目 |
-| `/api/user/testQuestion/submitTestQuestion` | POST | 提交代码 |
-| `/api/user/testQuestion/getTestPointsListByQuestionId` | GET | 获取测试点 |
-| `/api/user/testQuestion/getTestQuestionByName` | GET | 搜索题目 |
-
-### 管理员接口
-
-| 接口 | 方法 | 说明 |
-|------|------|------|
-| `/api/testQuestion/getTestQuestionByPage` | GET | 分页获取题目列表 |
-| `/api/testQuestion/addTestQuestion` | POST | 添加题目 |
-| `/api/testQuestion/updateTestQuestion` | POST | 更新题目 |
-| `/api/testQuestion/deleteTestQuestionById` | DELETE | 删除题目 |
-
-## 配置说明
-
-### 后端配置（application.yml）
+编辑 `src/main/resources/application.yml`，修改数据库和Redis连接信息：
 
 ```yaml
-server:
-  port: 8080
-
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/oj
@@ -215,64 +142,110 @@ spring:
     password: your_redis_password
 ```
 
-### 前端配置（vite.config.js）
-
-```javascript
-server: {
-  port: 5173,
-  proxy: {
-    '/api': {
-      target: 'http://localhost:8080',
-      changeOrigin: true
-    }
-  }
-}
+4. **启动应用**
+```bash
+mvn spring-boot:run
 ```
 
-## Docker 部署
+服务将在 `http://localhost:8080` 启动。
 
-### 后端 Dockerfile
+### Docker 部署
 
-后端 Dockerfile 位于 `docker/Dockerfile`，使用多阶段构建优化镜像大小。
+1. **进入docker目录**
+```bash
+cd docker
+```
 
-### 前端 Dockerfile
+2. **启动所有服务**
+```bash
+docker-compose up -d --build
+```
 
-前端 Dockerfile 位于 `frontend/Dockerfile`，使用 Nginx 部署静态文件。
+这将启动以下服务：
+- **MySQL** - 端口 3306
+- **Redis** - 端口 6379
+- **OJ应用** - 端口 8080
 
-### Docker Compose
+## 配置说明
 
-使用 `docker-compose.yml` 可以一键启动所有服务，包括：
-- 后端服务（Spring Boot）
-- 前端服务（Nginx）
-- MySQL 数据库
-- Redis 缓存
+### 数据库配置
+
+```yaml
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/oj
+    username: root
+    password: your_password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+```
+
+### Redis配置
+
+```yaml
+spring:
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password: 123456
+    database: 0
+    timeout: 3000ms
+```
+
+### MyBatis Plus配置
+
+```yaml
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: oj.pojo.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+```
+
+## 核心功能说明
+
+### 代码判题
+
+系统通过 Docker 容器实现代码的安全隔离执行：
+- 每个判题请求在独立容器中运行
+- 支持资源限制（内存、CPU、执行时间）
+- 网络隔离确保安全
+
+### 用户认证
+
+- 使用 Redis 存储用户会话 Token
+- 通过 TokenInterceptor 拦截器验证请求
+
+### 异步处理
+
+- 通过 AsyncConfig 配置异步任务执行器
+- 支持判题任务的异步执行
 
 ## 开发指南
 
-### 添加新的编程语言支持
+### 添加新的编程语言
 
-1. 后端：在 `LocalCodeRunner.java` 中添加新的语言配置
-2. 前端：在 `QuestionDetail.vue` 中的 `languageExtensions` 和 `defaultCode` 添加相应配置
+在 `LanguageConstants.java` 中添加新的语言常量：
 
-### 添加新的题目
+```java
+public static final Integer LANG_NEW = 30;
 
-1. 以管理员身份登录
-2. 进入"题目管理"页面
-3. 点击"添加题目"按钮
-4. 填写题目信息并添加测试点
-5. 点击"确定"保存
+static {
+    LANGUAGE_NAME_TO_ID.put("NewLanguage", LANG_NEW);
+}
+```
 
-## 注意事项
+### 数据库表结构
 
-1. 确保 Docker 已安装并运行
-2. 首次启动需要等待数据库初始化
-3. 默认管理员账号需要在数据库中手动创建
-4. 代码判题使用 Docker 容器隔离，确保 Docker 服务正常运行
+主要数据表：
+- `user` - 用户信息
+- `questions` - 题目信息
+- `test_point` - 测试点
+- `user_submission_code` - 用户提交代码
+- `user_submission_record` - 提交记录
+- `comment` - 评论
+- `comment_like` - 评论点赞
 
 ## 许可证
 
-MIT
-
-## 贡献
-
-欢迎提交 Issue 和 Pull Request！
+MIT License
