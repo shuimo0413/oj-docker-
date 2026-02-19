@@ -41,8 +41,8 @@ public class CommentController {
     }
 //    获取单条评论
     @GetMapping("/getComment")
-    public Result getComment(@RequestParam Integer commentId) {
-        CommentVO commentVO = commentService.getCommentById(commentId);
+    public Result getComment(@RequestParam Integer commentId,@RequestParam Integer userId) {
+        CommentVO commentVO = commentService.getCommentById(commentId, userId);
         return Result.success(commentVO);
     }
 
@@ -50,13 +50,13 @@ public class CommentController {
     @GetMapping("/getComments")
     public Result getComments(@RequestParam Integer questionId,
                               @RequestParam Integer pageNum,
-                              @RequestParam Integer pageSize) {
+                              @RequestParam Integer pageSize,
+                              @RequestParam Integer userId  ) {
         List<Integer> commentIds = commentService.selectCommentIds(questionId, pageNum, pageSize);
         List<CommentVO> commentVOList = new ArrayList<>();
         // 后续根据commentIds查询评论详情
         for (Integer commentId : commentIds) {
-
-            CommentVO commentVO = commentService.getCommentById(commentId);
+            CommentVO commentVO = commentService.getCommentById(commentId,userId);
             commentVOList.add(commentVO);
         }
         return Result.success(commentVOList);

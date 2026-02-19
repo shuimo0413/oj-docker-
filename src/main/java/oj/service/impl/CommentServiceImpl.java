@@ -42,7 +42,6 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         log.info("评论：{}", comment);
 
         commentMapper.insert(comment);
-
     }
 
     @Override
@@ -56,7 +55,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     }
 
     @Override
-    public CommentVO getCommentById(Integer commentId) {
+    public CommentVO getCommentById(Integer commentId,Integer userId) {
         CommentVO commentVO = new CommentVO();
 
 //        先获取本评论的内容
@@ -64,6 +63,8 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         commentVO = ClassMergeUtils.merge(comment, commentVO);
         // 根据userId获取用户名
         commentVO.setUserName(userMapper.selectById(comment.getUserId()).getUsername());
+        // 获取是否点赞,注意这里是使用userId而并非getUserId
+        commentVO.setIsLiked(selectIsLike(userId,commentId));
 
 //        获取子评论的内容
         ArrayList<Integer> commentIds = new ArrayList<>();
@@ -90,10 +91,14 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             List<CommentVO> childComments = commentMapper.selectChildComments(commentIds);
             for (CommentVO childCommentVO : childComments) {
                 childCommentVO.setUserName(userMapper.selectById(childCommentVO.getUserId()).getUsername());
+//                这个getId是获取题目的id
+                childCommentVO.setIsLiked(selectIsLike(userId,childCommentVO.getId()));
             }
 
             commentVO.setChildComments(childComments);
+
         }
+
 
         return commentVO;
     }
@@ -129,6 +134,13 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     }
 
 
+//    我是否点赞
+    private Boolean selectIsLike(Integer UserId, Integer commentId){
+        Integer count = commentLikeMapper.selectIsLike(UserId, commentId);
+        return count != null && count > 0;
+    }
+
+
     @Override
     public void cancelCommentLike(CancelCommentLikeDTO cancelCommentLikeDTO) {
 //        根据commentId删除评论点赞
@@ -142,6 +154,5 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         Integer offset = (pageNum - 1) * pageSize;
         return commentMapper.selectCommentIds(questionId, offset, pageSize);
     }
-
 
 }

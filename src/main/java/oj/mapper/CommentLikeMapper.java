@@ -19,4 +19,8 @@ public interface CommentLikeMapper extends BaseMapper<CommentLike> {
 
 
     void deleteCommentLikeByCommentIds(@Param("commentIds") ArrayList<Integer> commentIds);
+
+
+    @Select("select count(*) from comment_likes where user_id = #{userId} and comment_id = #{commentId}")
+    Integer selectIsLike(@Param("userId") Integer userId,@Param("commentId") Integer commentId);
 }

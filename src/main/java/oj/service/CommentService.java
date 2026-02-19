@@ -15,13 +15,12 @@ public interface CommentService extends IService<Comment> {
 
     void addCommentLikeDTO(CommentLikeDTO commentLikeDTO);
 
-    CommentVO getCommentById(Integer commentId);
+    CommentVO getCommentById(Integer commentId,Integer userId);
+
 
     void cancelCommentLike(CancelCommentLikeDTO cancelCommentLikeDTO);
 
     List<Integer> selectCommentIds(Integer questionId, Integer pageNum, Integer pageSize);
-
-
 
     void deleteCommentById(Integer commentId);
 }
