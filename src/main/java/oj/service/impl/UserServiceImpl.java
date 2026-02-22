@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.concurrent.TimeUnit;
 
+import static oj.constant.UserConstants.USER_TOKEN_TIMEOUT;
+
 @Slf4j
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
@@ -61,7 +63,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         String token = MD5Utils.md5(userDTO.getUsername() + userDTO.getPassword());
         userVO.setToken(token);
 //        将token存入redis
-        redisTemplate.opsForValue().set(token, userVO.getUsername(), 1, TimeUnit.HOURS);
+        redisTemplate.opsForValue().set(token, userVO.getUsername(), USER_TOKEN_TIMEOUT, TimeUnit.HOURS);
         userVO.setToken(token);
         userVO.setMessage("登录成功");
 
