@@ -1,13 +1,13 @@
 package oj.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import oj.constant.dto.ChangePasswordDTO;
-import oj.constant.dto.UpdateUserInfo;
-import oj.constant.dto.UserDTO;
-import oj.constant.dto.AddUserDTO;
-import oj.constant.entity.User;
-import oj.constant.vo.AddUserVO;
-import oj.constant.vo.UserVO;
+import oj.pojo.dto.ChangePasswordDTO;
+import oj.pojo.dto.UpdateUserInfo;
+import oj.pojo.dto.UserDTO;
+import oj.pojo.dto.AddUserDTO;
+import oj.pojo.entity.User;
+import oj.pojo.vo.AddUserVO;
+import oj.pojo.vo.UserVO;
 
 public interface UserService extends IService<User> {
     UserVO login(UserDTO userDTO);

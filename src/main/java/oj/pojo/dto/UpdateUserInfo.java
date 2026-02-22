@@ -1,4 +1,4 @@
-package oj.constant.dto;
+package oj.pojo.dto;
 
 import lombok.Data;
 

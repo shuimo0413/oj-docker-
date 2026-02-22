@@ -1,4 +1,4 @@
-package oj.constant.vo;
+package oj.pojo.vo;
 
 import lombok.Data;
 

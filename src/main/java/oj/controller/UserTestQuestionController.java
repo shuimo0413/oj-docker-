@@ -1,11 +1,11 @@
 package oj.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import oj.constant.pojo.Result;
-import oj.constant.dto.SubmitTestQuestionDTO;
-import oj.constant.vo.SubmitTestQuestionVO;
-import oj.constant.vo.TestPointVO;
-import oj.constant.vo.TestQuestionVO;
+import oj.pojo.entity.Result;
+import oj.pojo.dto.SubmitTestQuestionDTO;
+import oj.pojo.vo.SubmitTestQuestionVO;
+import oj.pojo.vo.TestPointVO;
+import oj.pojo.vo.TestQuestionVO;
 import oj.service.TestQuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

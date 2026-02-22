@@ -1,12 +1,12 @@
 package oj.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import oj.constant.dto.AddTestQuestionDTO;
-import oj.constant.dto.SubmitTestQuestionDTO;
-import oj.constant.entity.Questions;
-import oj.constant.vo.SubmitTestQuestionVO;
-import oj.constant.vo.TestPointVO;
-import oj.constant.vo.TestQuestionVO;
+import oj.pojo.dto.AddTestQuestionDTO;
+import oj.pojo.dto.SubmitTestQuestionDTO;
+import oj.pojo.entity.Questions;
+import oj.pojo.vo.SubmitTestQuestionVO;
+import oj.pojo.vo.TestPointVO;
+import oj.pojo.vo.TestQuestionVO;
 
 import java.util.List;
 

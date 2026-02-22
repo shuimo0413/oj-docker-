@@ -1,6 +1,6 @@
 package oj.constant;
 
-public class TestPointConstants {
+public final class TestPointConstants {
     private TestPointConstants() {
         throw new AssertionError("常量类禁止实例化");
     }

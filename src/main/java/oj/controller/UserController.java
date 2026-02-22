@@ -2,14 +2,14 @@ package oj.controller;
 
 
 import lombok.extern.slf4j.Slf4j;
-import oj.constant.pojo.Result;
+import oj.pojo.entity.Result;
 
-import oj.constant.dto.ChangePasswordDTO;
-import oj.constant.dto.UpdateUserInfo;
-import oj.constant.dto.UserDTO;
-import oj.constant.dto.AddUserDTO;
-import oj.constant.vo.AddUserVO;
-import oj.constant.vo.UserVO;
+import oj.pojo.dto.ChangePasswordDTO;
+import oj.pojo.dto.UpdateUserInfo;
+import oj.pojo.dto.UserDTO;
+import oj.pojo.dto.AddUserDTO;
+import oj.pojo.vo.AddUserVO;
+import oj.pojo.vo.UserVO;
 import oj.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

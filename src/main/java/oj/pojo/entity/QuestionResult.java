@@ -1,4 +1,4 @@
-package oj.constant.pojo;
+package oj.pojo.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,4 +1,4 @@
-package oj.constant.rpc;
+package oj.pojo.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

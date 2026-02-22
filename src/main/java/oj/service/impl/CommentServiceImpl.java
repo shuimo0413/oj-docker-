@@ -3,14 +3,14 @@ package oj.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-import oj.constant.dto.CancelCommentLikeDTO;
-import oj.constant.dto.CommentDTO;
-import oj.constant.dto.CommentLikeDTO;
-import oj.constant.pojo.CommentLike;
-import oj.constant.vo.CommentVO;
+import oj.pojo.dto.CancelCommentLikeDTO;
+import oj.pojo.dto.CommentDTO;
+import oj.pojo.dto.CommentLikeDTO;
+import oj.pojo.entity.CommentLike;
+import oj.pojo.vo.CommentVO;
 import oj.mapper.CommentLikeMapper;
 import oj.mapper.CommentMapper;
-import oj.constant.pojo.Comment;
+import oj.pojo.entity.Comment;
 import oj.mapper.UserMapper;
 import oj.service.CommentService;
 import oj.util.ClassMergeUtils;
@@ -36,23 +36,28 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
 
     @Override
-    public void addComment(CommentDTO commentDTO){
+    public Integer addComment(CommentDTO commentDTO){
         Comment comment = ClassMergeUtils.merge(commentDTO, new Comment());
-//        根据userId获取用户名
         log.info("评论：{}", comment);
-
         commentMapper.insert(comment);
-
+        return comment.getId();
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void addCommentLikeDTO(CommentLikeDTO commentLikeDTO) {
+        Integer userId = commentLikeDTO.getUserId();
+        Integer commentId = commentLikeDTO.getCommentId();
+        
+        int exists = commentLikeMapper.countByUserIdAndCommentId(userId, commentId);
+        if (exists > 0) {
+            log.info("用户{}已点赞评论{}，跳过", userId, commentId);
+            return;
+        }
+        
         CommentLike commentLike = ClassMergeUtils.merge(commentLikeDTO, new CommentLike());
-
         commentLikeMapper.insert(commentLike);
-        Integer commentId = commentLike.getCommentId();
-        // 更新评论的点赞数量
-        commentMapper.addLikeCount(commentId,1);
+        commentMapper.addLikeCount(commentId, 1);
     }
 
     @Override
@@ -102,14 +107,12 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void deleteCommentById(Integer commentId) {
-//        根据评论内容，寻找评论的子评论
+    public List<Integer> deleteCommentById(Integer commentId) {
         Queue<Integer> queue = new LinkedList<>();
         ArrayList<Integer> commentIds = new ArrayList<>();
         queue.offer(commentId);
 
         while (!queue.isEmpty()) {
-//            获取当前队列的头元素
             Integer childId = queue.poll();
             commentIds.add(childId);
 
@@ -120,20 +123,24 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
                 }
             }
         }
-//        我们已经找到了所有的评论的id，所以我们可以开始删除了
         commentMapper.deleteCommentById(commentIds);
         log.info("删除评论完成");
-//        我们删除了所有的评论，所有的点赞也得跟着删除
         commentLikeMapper.deleteCommentLikeByCommentIds(commentIds);
-
+        
+        return commentIds;
     }
 
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void cancelCommentLike(CancelCommentLikeDTO cancelCommentLikeDTO) {
-//        根据commentId删除评论点赞
-        commentMapper.addLikeCount(cancelCommentLikeDTO.getCommentId(), -1);
-        commentLikeMapper.deleteByUserIdAndCommentId(cancelCommentLikeDTO.getUserId(), cancelCommentLikeDTO.getCommentId());
+        Integer commentId = cancelCommentLikeDTO.getCommentId();
+        Integer userId = cancelCommentLikeDTO.getUserId();
+        
+        int deleted = commentLikeMapper.deleteByUserIdAndCommentId(userId, commentId);
+        if (deleted > 0) {
+            commentMapper.addLikeCount(commentId, -1);
+        }
     }
 
     @Override

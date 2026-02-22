@@ -1,9 +1,9 @@
 package oj.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import oj.constant.dto.UpdateUserInfo;
-import oj.constant.entity.User;
-import oj.constant.vo.UserVO;
+import oj.pojo.dto.UpdateUserInfo;
+import oj.pojo.entity.User;
+import oj.pojo.vo.UserVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;

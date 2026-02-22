@@ -1,4 +1,4 @@
-package oj.constant.entity;
+package oj.pojo.entity;
 
 import lombok.Data;
 

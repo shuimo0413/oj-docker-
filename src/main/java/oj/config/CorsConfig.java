@@ -14,6 +14,8 @@ public class CorsConfig {
         // 允许前端源（你的前端地址：localhost:63342）
 //        config.addAllowedOrigin("http://localhost:5057");
 
+//        config.addAllowedOrigin("http://localhost:8081");
+
         config.addAllowedOrigin("*");
         // 允许 POST/GET 等请求方法
         config.addAllowedMethod("*");

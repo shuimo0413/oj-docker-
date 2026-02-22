@@ -1,8 +1,8 @@
 package oj.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import oj.constant.pojo.Comment;
-import oj.constant.vo.CommentVO;
+import oj.pojo.entity.Comment;
+import oj.pojo.vo.CommentVO;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
@@ -28,5 +28,8 @@ public interface CommentMapper extends BaseMapper<Comment> {
 
 
     void deleteCommentById(@Param("commentIds") ArrayList<Integer> commentIds);
+
+    @Select("select id from comments")
+    List<Integer> selectAllCommentIds();
 
 }

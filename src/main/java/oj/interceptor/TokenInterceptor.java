@@ -1,6 +1,6 @@
 package oj.interceptor;
 
-import oj.constant.pojo.Result;
+import oj.pojo.entity.Result;
 import oj.util.RedisUtils;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,21 +1,3 @@
-# 应用名称
-#spring:
-#  application:
-#    name: my-spring-boot-app # 你的应用名称
-
-# 数据库配置 (以 MySQL 为例)
-
-# Spring Data JPA 配置
-#  jpa:
-#    database-platform: org.hibernate.dialect.MySQL8Dialect
-#    show-sql: true # 在控制台显示SQL语句，方便调试
-#    hibernate:
-#      ddl-auto: update # 自动更新数据库表结构 (开发环境常用)
-
-# 服务器配置
-
-
-
 server:
   port: 8080
 
@@ -62,4 +44,5 @@ mybatis-plus:
     map-underscore-to-camel-case: true
     # 打印 SQL 日志
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
 

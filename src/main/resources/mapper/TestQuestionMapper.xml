@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="oj.mapper.TestQuestionMapper">
 
-    <insert id="addTestQuestion" parameterType="oj.constant.dto.AddTestQuestionDTO" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+    <insert id="addTestQuestion" parameterType="oj.pojo.dto.AddTestQuestionDTO" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
         insert into questions (
         <if test="id != null and id != ''">id,</if>
         title,
@@ -54,7 +54,7 @@
         delete from test_points where question_id = #{id}
     </delete>
 
-    <select id="selectTestQuestionByPage" resultType="oj.constant.vo.TestQuestionVO">
+    <select id="selectTestQuestionByPage" resultType="oj.pojo.vo.TestQuestionVO">
         select * from questions
         <where>
             <if test="keyword != null and keyword != ''">
@@ -64,15 +64,15 @@
         limit #{start}, #{size}
     </select>
 
-    <select id="selectTestQuestionById" parameterType="java.lang.String" resultType="oj.constant.vo.TestQuestionVO">
+    <select id="selectTestQuestionById" parameterType="java.lang.String" resultType="oj.pojo.vo.TestQuestionVO">
         select * from questions where id = #{id}
     </select>
 
-    <select id="selectTestPointsByQuestionId" parameterType="java.lang.String" resultType="oj.constant.vo.TestPointVO">
+    <select id="selectTestPointsByQuestionId" parameterType="java.lang.String" resultType="oj.pojo.vo.TestPointVO">
         select * from test_points where question_id = #{id}
     </select>
 
-    <select id="selectTestQuestionsByName" resultType="oj.constant.vo.TestQuestionVO">
+    <select id="selectTestQuestionsByName" resultType="oj.pojo.vo.TestQuestionVO">
         select * from questions where title like #{name}
     </select>
 

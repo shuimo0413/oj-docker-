@@ -1,4 +1,4 @@
-package oj.constant.entity;
+package oj.pojo.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;

@@ -1,7 +1,7 @@
-package oj.constant.vo;
+package oj.pojo.vo;
 
 import lombok.Data;
-import oj.constant.pojo.QuestionResult;
+import oj.pojo.entity.QuestionResult;
 
 import java.util.List;
 

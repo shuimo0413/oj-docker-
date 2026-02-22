@@ -1,4 +1,4 @@
-package oj.constant.vo;
+package oj.pojo.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;

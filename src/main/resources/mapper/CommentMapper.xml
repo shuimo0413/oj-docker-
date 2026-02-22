@@ -11,7 +11,7 @@
     </delete>
 
 
-    <select id="selectChildComments" resultType="oj.constant.vo.CommentVO">
+    <select id="selectChildComments" resultType="oj.pojo.vo.CommentVO">
         select * from comments where id in
         <foreach collection="commentIds" item="id" open="(" close=")" separator=",">
             #{id}

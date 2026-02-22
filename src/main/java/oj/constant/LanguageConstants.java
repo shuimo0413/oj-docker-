@@ -1,6 +1,6 @@
 package oj.constant;
 
-public class LanguageConstants {
+public final class LanguageConstants {
     private LanguageConstants() {
         throw new AssertionError("常量类禁止实例化");
     }

@@ -1,7 +1,7 @@
 package oj.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import oj.constant.entity.UserSubmissionCode;
+import oj.pojo.entity.UserSubmissionCode;
 
 
 public interface CodeMapper extends BaseMapper<UserSubmissionCode> {

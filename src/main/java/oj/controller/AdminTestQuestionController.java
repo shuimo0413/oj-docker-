@@ -1,10 +1,10 @@
 package oj.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import oj.constant.pojo.Result;
-import oj.constant.dto.AddTestQuestionDTO;
-import oj.constant.vo.TestPointVO;
-import oj.constant.vo.TestQuestionVO;
+import oj.pojo.entity.Result;
+import oj.pojo.dto.AddTestQuestionDTO;
+import oj.pojo.vo.TestPointVO;
+import oj.pojo.vo.TestQuestionVO;
 import oj.service.TestQuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +25,9 @@ public class AdminTestQuestionController {
         if (keyword != null && keyword.trim().isEmpty()) {
             keyword = null;
         }
+
+
+
         log.info("分页查询测试题目: {}, {}, {}", pageNum, size, keyword);
         List<TestQuestionVO> testQuestionVOList = testQuestionService.SelectTestQuestionByPage(pageNum, size,keyword);
         return Result.success(testQuestionVOList);

@@ -1,12 +1,12 @@
 package oj.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import oj.constant.dto.AddTestQuestionDTO;
-import oj.constant.dto.TestPointDTO;
-import oj.constant.entity.Questions;
-import oj.constant.rpc.SubmissionRecordRpcResponse;
-import oj.constant.vo.TestPointVO;
-import oj.constant.vo.TestQuestionVO;
+import oj.pojo.dto.AddTestQuestionDTO;
+import oj.pojo.dto.TestPointDTO;
+import oj.pojo.entity.Questions;
+import oj.pojo.rpc.SubmissionRecordRpcResponse;
+import oj.pojo.vo.TestPointVO;
+import oj.pojo.vo.TestQuestionVO;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
